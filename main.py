@@ -1,4 +1,5 @@
 import YaUploader
+import GDUploader
 import VKUser
 import json
 from datetime import datetime  # , timedelta
@@ -49,6 +50,16 @@ def save_photos_to_yadisk(ya_disk, folder_name, photos):
     save_photos_information(folder_name + "_data.json", files_information)
 
 
+def save_photos_to_gdrive(gdisk, folder_name, photos):
+    folder_id = gdisk.create_folder(folder_name)
+    files_information = list()
+    for photo in photos:
+        gdisk.upload_url_file(photo["url"], folder_id)
+        files_information.append(
+            {"file_name": photo['file_name'], "size": photo['size']})
+    save_photos_information(folder_name + "_data.json", files_information)
+
+
 def main():
     user_id = int(input("Введите id пользователя Вконтакте: "))
     yandex_token = input("Введите токен Яндекса: ")
@@ -62,4 +73,17 @@ def main():
     save_photos_to_yadisk(ya_disk, new_folder, photos)
 
 
-main()
+def main_vk_gdisk():
+    user_id = int(input("Введите id пользователя Вконтакте: "))
+
+    social_user = VKUser.VKUser(user_id)
+    photos = get_photos_from_vk_user(social_user, 5)
+
+    gdrive = GDUploader.GDUploader()
+    new_folder = (
+        f"img_from_vk_id{user_id}_dt{datetime.now().strftime('%Y%m%d%H%M%S')}")
+    save_photos_to_gdrive(gdrive, new_folder, photos)
+
+
+main_vk_gdisk()
+35163310

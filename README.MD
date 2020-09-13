@@ -1,5 +1,5 @@
-# Task: Download last the biggest size photos from member of social network vk.com (*\<be> in touch*) and upload them to Yandex Disk new folder. 
-## Description: the template of file name is \<count_of_likes>.\<ext>. If the same number of likes are found, download date must be added to the file names. Also need to write a json file with file upload information (file name and image size). The new Yandex Disk folder's template is \"img_from_vk_id\<VK_user_id>\_dt\<current datetime in YYYYMMDDHHMISS format>"
+# Task: Download last the biggest size photos from member of social network vk.com (*\<be> in touch*) and upload them to Yandex Disk or Google Drive new folder. 
+## Description: the template of file name is \<count_of_likes>.\<ext>. If the same number of likes are found, download date must be added to the file names. Also need to write a json file with file upload information (file name and image size). The new Yandex Disk/Google Drive folder's template is \"img_from_vk_id\<VK_user_id>\_dt\<current datetime in YYYYMMDDHHMISS format>"
 
 ## Warning! Task was changed: it is possible situation when photos uploaded at the same date and had the same count of likes. At this case adding upload date will cause an error, so I add upload datetime.
 
@@ -37,6 +37,21 @@ create_folder		|ydisk_path:str|_dict_ with result of execution|create folder as 
     result = uploader.create_folder("/testfolder6")
 ```
 
+
+### Class GDUploader
+#### Description:
+Method	  | Parameters | Return type|Description
+:-------- |:-----:|:-----:|:-------
+\_\_init__ 		 	| -  | -|Second method during Class creation
+upload_local_file	|local_file_path_name:str, gdrive_folder_id:str|-|upload local_file_path_name (path and file_name) from local computer to gdrive_folder_id
+upload_url_file		|url_file_web:str, , gdrive_folder_id:str|-|upload url_file_web from web to gdrive_folder_id
+create_folder		|gd_path:str|_str_ with folder_id|create folder as gd_path (path from the root of google drive disk)
+
+#### Example of using YaUploader Class:
+```python
+    uploader = GDUploader()
+    result = uploader.create_folder("testfolder6")
+```
 
 #### log:
 ```log
