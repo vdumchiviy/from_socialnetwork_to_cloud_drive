@@ -1,9 +1,10 @@
 import requests
 import os
+from Uploader import Uploader
 
 
-class YaUploader:
-    """Class YaUploader - create folde and uploading files (from web or local) to Yandex Disk
+class YaUploader(Uploader):
+    """Class YaUploader - create folder and uploading files (from web or local) to Yandex Disk
     # 1.0 25.08.2020 Start
     # 1.1 06.09.2020 Unification
     # 1.2 31.10.2020 Added docstring
