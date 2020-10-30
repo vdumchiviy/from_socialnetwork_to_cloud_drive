@@ -3,11 +3,21 @@ import os
 
 
 class YaUploader:
-    # 1.0 25.08.2020 Изначальный вариант
-    # 1.1 06.09.2020
+    """Class YaUploader - create folde and uploading files (from web or local) to Yandex Disk
+    # 1.0 25.08.2020 Start
+    # 1.1 06.09.2020 Unification
+    # 1.2 31.10.2020 Added docstring
 
-    # Версия 1.1
+    # Версия 1.2
+    """
+
     def __init__(self,  yandex_token: str):
+        """Initializing of the class YaUploader
+
+        Args:
+            yandex_token (str): TOKEN for Yandex Disk
+        """
+
         self.YANDEX_TOKEN = yandex_token
         self.headers = {'Accept': 'application/json',
                         'Authorization': self.YANDEX_TOKEN}
@@ -27,7 +37,19 @@ class YaUploader:
         print(result['message'])
         return result
 
-    def _get_upload_url(self, ydisk_file_path_name):
+    def _get_upload_url(self, ydisk_file_path_name: str):
+        """This function get a link from Yandex Disk to upload file
+
+        Args:
+            ydisk_file_path_name (str):  path and file_name on Yandex Disk
+
+        Returns:
+            [dict]: information about action of uploading:
+                    [status_code] - status code from Yandex Disk
+                    [message] - result message
+                    [href] - link for uploading the file (optioanl)
+        """
+
         result = dict()
         url_for_request = f"{self.yad_url}/upload?path={ydisk_file_path_name.replace('/','%2F')}&overwrite=true"
         response = requests.get(
@@ -41,8 +63,20 @@ class YaUploader:
         print(result['message'])
         return result
 
-    def upload_local_file(self, local_file_path_name, ydisk_file_path_name=None):
-        ''' upload local_file_path_name (path and file_name) from local computer as ydisk_file_path_name (path and file_name)'''
+    def upload_local_file(self, local_file_path_name: str, ydisk_file_path_name: str = None):
+        """Upload file from local computer as file to Yandex Disk
+
+        Args:
+            local_file_path_name (str): path and file_name from local computer
+            ydisk_file_path_name (str, optional): path and file_name on Yandex Disk. Defaults to None.
+
+        Returns:
+            [dict]: information about action of uploading:
+                    [status_code] - status code from Yandex Disk
+                    [message] - result message
+                    [href] - link for uploading the file (optioanl)
+        """
+
         result = dict()
         if ydisk_file_path_name is None:
             ydisk_file_path_name = "/" + os.path.basename(local_file_path_name)
@@ -57,7 +91,18 @@ class YaUploader:
 
         return result
 
-    def create_folder(self, ydisk_path):
+    def create_folder(self, ydisk_path: str):
+        """This function create folder on Yandex Disk
+
+        Args:
+            ydisk_path (str): full path from the root of Yandex Disk
+
+        Returns:
+            [dict]: information about action of uploading:
+                    [status_code] - status code from Yandex Disk
+                    [message] - result message
+        """
+
         ''' create folder as ydisk_path (path from the root of yandex disk)'''
         result = dict()
         url_for_request = f"{self.yad_url}?path={ydisk_path.replace('/','%2F')}"
@@ -72,8 +117,20 @@ class YaUploader:
         print(result['message'])
         return result
 
-    def upload_url_file(self, url_file_web, ydisk_file_path_name=None):
-        ''' upload file from url (url_file_web) as ydisk_file_path_name (path and file_name)'''
+    def upload_url_file(self, url_file_web: str, ydisk_file_path_name: str = None):
+        """This function upload file from URI as file to Yandex Disk
+
+        Args:
+            url_file_web (str): full URI to file
+            ydisk_file_path_name (str, optional): path and file_name on Yandex Disk. Defaults to None.
+
+        Returns:
+            [dict]: information about action of uploading:
+                    [status_code] - status code from Yandex Disk
+                    [message] - result message
+                    [href] - link for uploading the file (optioanl)
+        """
+
         result = dict()
         url_for_request = f"{self.yad_url}/upload?path={ydisk_file_path_name.replace('/','%2F')}&url={url_file_web.replace('/','%2F')}"
         response = requests.post(url=url_for_request,
