@@ -8,11 +8,18 @@ from google.auth.transport.requests import Request
 from apiclient.http import MediaFileUpload, MediaIoBaseDownload
 from tempfile import gettempdir
 import requests
+from Uploader import Uploader
 
 # Взят за основу google.develop
 
 
-class GDUploader:
+class GDUploader (Uploader):
+    """Class GDUploader - create folder and uploading files (from web or local) to Google Drive
+
+    Args:
+        Uploader ([abstract class]): Abstract class
+    """
+
     def __init__(self):
         # If modifying these scopes, delete the file token.pickle.
         self.SCOPES = [
@@ -40,6 +47,8 @@ class GDUploader:
         self.service = build('drive', 'v3', credentials=creds)
 
     def get_files_list(self):
+        """This function print 10 files from Google Drive
+        """
         # Call the Drive v3 API
         results = self.service.files().list(
             pageSize=10, fields="nextPageToken, files(id, name)").execute()
@@ -47,10 +56,16 @@ class GDUploader:
         for item in items:
             print(f"{item['name']} ({item['id']})")
 
-    def create_folder(self, gd_path):
-        """ create folder as gd_path (path from the root of google drive disk)
-        return folder_id
+    def create_folder(self, gd_path: str):
+        """This function create folder on Google Drive
+
+        Args:
+            gd_path (str): path from the root of google drive disk
+
+        Returns:
+            [str]: folder id
         """
+
         result = None  # folder_id
         folder_metadata = {'name': gd_path,
                            'parents': list(''),
@@ -61,9 +76,16 @@ class GDUploader:
         print(result)
         return result
 
-    def upload_local_file(self, local_file_path_name, gdrive_folder_id):
-        """upload local_file_path_name (path and file_name) from local computer to gdrive_folder_id
+    def upload_local_file(self, local_file_path_name: str, gdrive_folder_id: str):
+        """Upload file from local computer as file to Google Drive
+
+        Args:
+            local_file_path_name (str): path and file_name from local computer
+            gdrive_folder_id (str): folder id on Google Drive
         """
+
+        upload local_file_path_name(path and file_name) from local computer to gdrive_folder_id
+
         result = None
         local_file_name = os.path.basename(local_file_path_name)
 
@@ -81,10 +103,16 @@ class GDUploader:
 
         print(result)
 
-    def _load_from_web_to_local_temp(self, url_file_web):
-        """ Download frile from web to temp directory of local drive 
-        Return full_path with file nime in temp directory of local drive
+    def _load_from_web_to_local_temp(self, url_file_web: str):
+        """Download file from web to temp directory of local drive
+
+        Args:
+            url_file_web (str): full URI to file
+
+        Returns:
+            local_file_path_name (str): full_path with file nime in temp directory of local drive
         """
+
         local_file_name = os.path.basename(url_file_web)
         local_file_path_name = (os.path.join(gettempdir(), local_file_name))
         downloaded_file = requests.get(url_file_web)
@@ -93,9 +121,14 @@ class GDUploader:
 
         return local_file_path_name
 
-    def upload_url_file(self, url_file_web, gdrive_folder_id):
-        """upload url_file_web from web to gdrive_folder_id
+    def upload_url_file(self, url_file_web: str, gdrive_folder_id: str):
+        """This function upload file from URI as file to folder on Google Drive
+
+        Args:
+            url_file_web (str): full URI to file
+            gdrive_folder_id (str): folder id on Google Drive
         """
+
         local_file_path_name = self._load_from_web_to_local_temp(url_file_web)
         self.upload_local_file(local_file_path_name, gdrive_folder_id)
 
