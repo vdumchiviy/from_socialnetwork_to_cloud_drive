@@ -84,8 +84,6 @@ class GDUploader (Uploader):
             gdrive_folder_id (str): folder id on Google Drive
         """
 
-        upload local_file_path_name(path and file_name) from local computer to gdrive_folder_id
-
         result = None
         local_file_name = os.path.basename(local_file_path_name)
 
