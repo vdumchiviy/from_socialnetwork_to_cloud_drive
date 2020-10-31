@@ -10,11 +10,12 @@ from datetime import datetime  # , timedelta
 
 def prepare_list_files(photos):
     photos_count = len(photos)
-    for photo_num in range(photos_count-1):
+    for photo_num in range(photos_count):
         photo = photos[photo_num]
         # print(photo)
         # counter = 0
-        for photo_num_same_like in range(photo_num+1, photos_count - 1):
+        photo["file_name"] = str(photo["likes"])
+        for photo_num_same_like in range(photo_num+1, photos_count):
             if photo["likes"] == photos[photo_num_same_like]["likes"]:
                 # print(photos[photo_num_same_like])
                 # counter += 1
@@ -86,4 +87,4 @@ def main_vk_gdisk():
 
 
 main_vk_gdisk()
-35163310
+# 35163310
