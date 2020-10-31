@@ -3,6 +3,13 @@ from datetime import datetime
 
 
 class VKUser():
+    """Class VKUser - access to VK API through user
+
+    Args:
+        (int): Vkontakte (VK) user id 
+    Returns:
+        []: object that represent VK user
+    """
     TOKEN = "958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008"
     VKAPI_URL = "https://api.vk.com/method/"
     PICTURE_SIZES = "wzyxrqpoms"
@@ -21,11 +28,15 @@ class VKUser():
     '''
 
     def __init__(self, user_id):
-        '''Second method during Class creation'''
         self.user_id = user_id
 
     def __str__(self):
-        '''string representation of the Class - link to the homepage of user'''
+        """string representation of the Class
+
+        Returns:
+            [str]: link to the homepage of user
+        """
+
         return f"https://vk.com/id{str(self.user_id)}"
 
     def print_user_id(self, user_id=None):
@@ -70,19 +81,37 @@ class VKUser():
     def _get_biggest_photo(self, photos_description):
         ''' return url the biggest photo from photos_description collection'''
 
-        for size in self.PICTURE_SIZES[0:]:
+        for size in self.PICTURE_SIZES:
             for photo_description in photos_description:
                 if photo_description["type"] == size:
                     # ------ EXIT!!! ------
                     return {"size": size,
                             "url": photo_description["url"],
-                            "file_type": photo_description["url"][photo_description["url"].rfind(".")+1:]
+                            "file_type": photo_description["url"].rsplit(".", 1)[-1]
                             }
 
         return dict()  # ------ EXIT!!! ------
 
-    def get_last_n_biggest_photos(self, user_id=None, album_id="profile", num_photos=0):
-        """ Get last count=num_photos from album_id of user_id"""
+    def get_last_n_biggest_photos(self, user_id: int = None, album_id: str = "profile", num_photos: int = 0):
+        """ Get last count=num_photos from album_id of user_id
+
+        Args:
+            user_id (int, optional): VK user id. Defaults to None.
+            album_id (str, optional): Album in VK, where photos located. Defaults to "profile".
+            num_photos (int, optional): number of photos to be downloaded. Defaults to 0.
+
+        Returns:
+            [list of dict]: photos:
+                ["likes"] - number of likes
+                ["date_vk"] - uploading date of photo 
+                ["date_num"] - a number representation of uploading date of photo (YYYYMMDD)
+                ["date_hum"] - a human representation of uploading date of photo (YYYYMMDDHHMISS)
+                ["size"] - a character representation of photo size 
+                ["url"] - direct URI of file
+                ["file_type"] - extension of photo
+                ["file_name"] - name of photo
+        """
+
         print(f"Вконтакте: запрошены последние {num_photos} фотографий")
         parameters = {"access_token": self.TOKEN,
                       "user_id": self.user_id if user_id is None else user_id,
